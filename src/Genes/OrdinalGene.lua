@@ -79,16 +79,6 @@ function OrdinalGene:mutate(forceMutate)
 	local arrayIndexMinusOne = arrayIndex - 1
 	
 	local arrayIndexPlusOne = arrayIndex + 1
-		
-	local arrayIndexMinusOneMutationWeight = mutationWeightArray[arrayIndex - 1]
-	
-	local arrayIndexMutationWeight = mutationWeightArray[arrayIndex]
-	
-	local arrayIndexPlusOneMutationWeight = mutationWeightArray[arrayIndex + 1]
-	
-	local totalWeight = arrayIndexMinusOneMutationWeight + arrayIndexPlusOneMutationWeight + arrayIndexMutationWeight
-
-	local randomPoint = mathRandom() * totalWeight
 
 	local neighbourIndexArray = {}
 	
