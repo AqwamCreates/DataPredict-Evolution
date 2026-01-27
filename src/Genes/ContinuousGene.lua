@@ -44,6 +44,16 @@ function ContinuousGene.new(parameterDictionary)
 
 end
 
+function ContinuousGene:mutate(ignoreChance)
+
+	if (self.mutationChance <= math.random()) then return end
+
+	local noise = self.mutationStandardDeviation * math.sqrt(-2 * math.log(math.random())) * math.cos(2 * math.pi * math.random())
+    
+	self.value = self.value + noise
+	
+end
+
 local DiscreteGene = {}
 
 function DiscreteGene.new(parameterDictionary)
@@ -64,8 +74,38 @@ function DiscreteGene.new(parameterDictionary)
 
 	self.mutationChoiceArray = mutationChoiceArray
 
-  self.mutationWeightArray = parameterDictionary.mutationWeightArray or parameterDictionary[4] or table.create(numberOfMutationChoices, (1/numberOfMutationChoices))
+  	self.mutationWeightArray = parameterDictionary.mutationWeightArray or parameterDictionary[4] or table.create(numberOfMutationChoices, 1)
 
 	return self
 
+end
+
+function DiscreteGene:mutate(ignoreChance)
+
+	if (self.mutationChance <= math.random()) then return end
+
+	local mutationChoiceArray = self.mutationChoiceArray
+
+	local totalWeight = 0
+	
+    for _, weight in ipairs(self.mutationWeightArray) do totalWeight = totalWeight + weight end
+        
+    local randomPoint = math.random() * totalWeight
+	
+    local accumulatedWeight = 0
+        
+    for i, weight in ipairs(self.mutationWeightArray) do
+		
+        accumulatedWeight = accumulatedWeight + weight
+		
+        if (randomPoint <= accumulatedWeight) then
+			
+            self.value = mutationChoiceArray[i]
+			
+            break
+			
+        end
+		
+    end
+	
 end
