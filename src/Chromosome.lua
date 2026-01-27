@@ -30,6 +30,46 @@ local mathRandom = math.random
 
 local Chromosome = {}
 
+local function deepCopyValue(original, copies)
+
+	copies = copies or {}
+
+	local originalType = type(original)
+
+	local copy
+
+	if (originalType == 'table') then
+
+		if copies[original] then
+
+			copy = copies[original]
+
+		else
+
+			copy = {}
+
+			copies[original] = copy
+
+			for originalKey, originalValue in next, original, nil do
+
+				copy[deepCopyValue(originalKey, copies)] = deepCopyValue(originalValue, copies)
+
+			end
+
+			setmetatable(copy, deepCopyValue(getmetatable(original), copies))
+
+		end
+
+	else
+
+		copy = original
+
+	end
+
+	return copy
+
+end
+
 function Chromosome.new(parameterDictionary)
 
 	parameterDictionary = parameterDictionary or {}
@@ -62,6 +102,12 @@ function Chromosome:activate()
 	
 	return self.activationFunction(table.unpack(valueArray))
 	
+end
+
+function Chromosome:clone()
+
+	return deepCopyValue(self)
+
 end
 
 function Chromosome:__tostring()
