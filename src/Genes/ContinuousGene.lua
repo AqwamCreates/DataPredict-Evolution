@@ -56,7 +56,7 @@ end
 
 function ContinuousGene:mutate(ignoreChance)
 
-	if (self.mutationChance <= math.random()) then return end
+	if (self.mutationChance <= mathRandom()) then return end
 
 	local noise = self.mutationStandardDeviation * mathSqrt(-2 * mathLog(mathRandom())) * mathCos(2 * mathPi * mathRandom())
 
