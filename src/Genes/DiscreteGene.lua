@@ -83,3 +83,5 @@ function DiscreteGene:mutate(ignoreChance)
 	end
 
 end
+
+return DiscreteGene
