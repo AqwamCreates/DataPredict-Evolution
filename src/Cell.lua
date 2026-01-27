@@ -105,9 +105,15 @@ function Cell:activate()
 end
 
 function Cell:clone()
-	
+
 	return deepCopyValue(self)
-	
+
+end
+
+function Cell:split() -- Splits the chromosome count into half for reproduction.
+
+
+
 end
 
 function Cell:exchange(OtherCell, exchangeRate) -- Trades genetics.
@@ -128,10 +134,4 @@ function Cell:donate(OtherCell) -- Donates a random chromosome to another cell.
 	
 end
 
-function Cell:split() -- Splits the chromosome count into half for reproduction.
-	
-	
-	
-end
-	
 return Cell
