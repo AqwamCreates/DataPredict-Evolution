@@ -98,7 +98,7 @@ function RouletteWheelSelector:select(ChromosomeAndScoreDictionaryArray)
 		
 	end
 
-	local spin = mathRandom() * totalFitness
+	local spinValue = mathRandom() * totalFitness
 	
 	local currentSum = 0
 	
