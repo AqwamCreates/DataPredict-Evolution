@@ -30,6 +30,8 @@ local BaseGene = require(script.Parent.BaseGene)
 
 local mathRandom = math.random
 
+local mathHuge = math.huge
+
 local mathSqrt = math.sqrt
 
 local mathLog = math.log
@@ -54,9 +56,9 @@ function ContinuousGene.new(parameterDictionary)
 	
 	local mutationStandardDeviation = parameterDictionary.mutationStandardDeviation or 1
 	
-	local maximumValue = parameterDictionary.maximumValue or math.huge
+	local maximumValue = parameterDictionary.maximumValue or mathHuge
 	
-	local minimumValue = parameterDictionary.minimumValue or -math.huge
+	local minimumValue = parameterDictionary.minimumValue or -mathHuge
 	
 	parameterDictionary.type = "Continuous"
 	
