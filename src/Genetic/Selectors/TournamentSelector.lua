@@ -34,6 +34,8 @@ local TournamentSelector = {}
 
 TournamentSelector.__index = TournamentSelector
 
+setmetatable(TournamentSelector, BaseSelector)
+
 function TournamentSelector.new(parameterDictionary)
 	
 	parameterDictionary = parameterDictionary or {}
@@ -43,6 +45,8 @@ function TournamentSelector.new(parameterDictionary)
 	parameterDictionary.type = "Tournament"
 	
 	local NewTournamentSelector = BaseSelector.new(parameterDictionary)
+	
+	setmetatable(NewTournamentSelector, TournamentSelector)
 	
 	NewTournamentSelector.tournamentSize = tournamentSize
 	
