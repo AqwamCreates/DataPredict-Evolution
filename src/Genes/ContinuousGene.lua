@@ -28,7 +28,6 @@
 
 local BaseGene = require(script.Parent.BaseGene)
 
-
 local mathRandom = math.random
 
 local mathSqrt = math.sqrt
