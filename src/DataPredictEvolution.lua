@@ -56,9 +56,9 @@ AqwamGeneticEvolutionLibrary.Genetic = {
 		
 	},
 	
-	Chromosome = require(script.Chromosome),
+	Chromosome = require(Genetic.Chromosome),
 	
-	PetriDish = require(script.PetriDish),
+	PetriDish = require(Genetic.PetriDish),
 
 }
 
