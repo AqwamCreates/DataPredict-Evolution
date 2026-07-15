@@ -26,15 +26,19 @@
 
 --]]
 
+local BaseGene = require(script.Parent.BaseGene)
+
 local mathRandom = math.random
 
 local GlobalOrdinalGene = {}
 
+GlobalOrdinalGene.__index = GlobalOrdinalGene
+
+setmetatable(GlobalOrdinalGene, BaseGene)
+
 function GlobalOrdinalGene.new(parameterDictionary)
 
 	parameterDictionary = parameterDictionary or {}
-
-	local self = setmetatable({}, GlobalOrdinalGene)
 
 	local value = parameterDictionary.value or parameterDictionary[1] or 0
 
@@ -47,18 +51,20 @@ function GlobalOrdinalGene.new(parameterDictionary)
 	local mutationWeightArray = parameterDictionary.mutationWeightArray or parameterDictionary[4] or table.create(numberOfMutationChoices, 1)
 	
 	local indexChange = parameterDictionary.indexChange or parameterDictionary[5] or 1
-
-	self.value = value
-
-	self.mutationChance = mutationChance
-
-	self.mutationChoiceArray = mutationChoiceArray
-
-	self.mutationWeightArray = mutationWeightArray
 	
-	self.indexChange = indexChange
+	parameterDictionary.type = "GlobalOrdinal"
+	
+	local NewGlobalOrdinalGene = BaseGene.new(parameterDictionary)
+	
+	setmetatable(NewGlobalOrdinalGene, GlobalOrdinalGene)
 
-	return self
+	NewGlobalOrdinalGene.mutationChoiceArray = mutationChoiceArray
+
+	NewGlobalOrdinalGene.mutationWeightArray = mutationWeightArray
+	
+	NewGlobalOrdinalGene.indexChange = indexChange
+
+	return NewGlobalOrdinalGene
 
 end
 
@@ -122,7 +128,7 @@ end
 
 function GlobalOrdinalGene:__tostring()
 
-	return tostring(self.value)
+	return tostring("Global Ordinal Gene Value: " ... self.value)
 
 end
 
