@@ -34,11 +34,11 @@ function BaseGene.new(parameterDictionary)
 
 	local self = setmetatable({}, BaseGene)
 
-	self.value = parameterDictionary.value or parameterDictionary[1] or 0
+	self.value = parameterDictionary.value or 0
 	
-	self.type = parameterDictionary.type or parameterDictionary[2] or "Base"
+	self.type = parameterDictionary.type or "Base"
 
-	self.mutationChance = parameterDictionary.mutationChance or parameterDictionary[3] or 0
+	self.mutationChance = parameterDictionary.mutationChance or 0
 
 	return self
 
