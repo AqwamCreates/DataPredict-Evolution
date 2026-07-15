@@ -100,13 +100,13 @@ function RouletteWheelSelector:select(ChromosomeAndScoreDictionaryArray)
 
 	local spinValue = mathRandom() * totalFitness
 	
-	local currentSum = 0
+	local currentSumValue = 0
 	
 	for arrayIndex, ChromosomeAndScoreDictionary in ipairs(ChromosomeAndScoreDictionaryArray) do
 		
-		currentSum = currentSum + fitnessValueArray[arrayIndex]
+		currentSumValue = currentSumValue + fitnessValueArray[arrayIndex]
 		
-		if (spin <= currentSum) then
+		if (spinValue <= currentSumValue) then
 
 			local Chromosome = ChromosomeAndScoreDictionary.Chromosome
 
