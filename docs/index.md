@@ -46,8 +46,6 @@ In addition, if you are interested in Roblox tutorials and future projects by me
 
 ## Version History
 
-* [Release](VersionHistory/ReleaseVersionHistory.md)
-
 * [Beta](VersionHistory/BetaVersionHistory.md)
 
 ## Just In Case
