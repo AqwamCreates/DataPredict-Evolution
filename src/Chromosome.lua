@@ -126,7 +126,7 @@ function Chromosome:clone()
 
 end
 
-function Chromosome:crossover(OtherChromosome, exchangeRate)
+function Chromosome:crossover(OtherChromosome, crossoverRate)
 	
 	local ClonedChromosome = self:clone()
 	
@@ -134,7 +134,7 @@ function Chromosome:crossover(OtherChromosome, exchangeRate)
 	
 	for geneIndex, ClonedGene in ipairs(ClonedChromosome.geneArray) do
 		
-		if (mathRandom() < exchangeRate) then
+		if (mathRandom() < crossoverRate) then
 			
 			local ClonedOtherGene = ClonedOtherChromosome.geneArray[geneIndex]
 			
