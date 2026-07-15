@@ -26,15 +26,19 @@
 
 --]]
 
+local BaseGene = require(script.Parent.BaseGene)
+
 local mathRandom = math.random
 
 local LocalOrdinalGene = {}
 
+LocalOrdinalGene.__index = LocalOrdinalGene
+
+setmetatable(LocalOrdinalGene, BaseGene)
+
 function LocalOrdinalGene.new(parameterDictionary)
 
 	parameterDictionary = parameterDictionary or {}
-
-	local self = setmetatable({}, LocalOrdinalGene)
 
 	local value = parameterDictionary.value or parameterDictionary[1] or 0
 
@@ -45,16 +49,18 @@ function LocalOrdinalGene.new(parameterDictionary)
 	local numberOfMutationChoices = #mutationChoiceArray
 
 	local mutationWeightArray = parameterDictionary.mutationWeightArray or parameterDictionary[4] or table.create(numberOfMutationChoices, 1)
+	
+	parameterDictionary.type = "LocalOrdinal"
+	
+	local NewLocalOrdinalGene = BaseGene.new(parameterDictionary)
+	
+	local NewLocalOrdinalGene = setmetatable(NewLocalOrdinalGene, LocalOrdinalGene)
 
-	self.value = value
+	NewLocalOrdinalGene.mutationChoiceArray = mutationChoiceArray
 
-	self.mutationChance = mutationChance
+	NewLocalOrdinalGene.mutationWeightArray = mutationWeightArray
 
-	self.mutationChoiceArray = mutationChoiceArray
-
-	self.mutationWeightArray = mutationWeightArray
-
-	return self
+	return NewLocalOrdinalGene
 
 end
 
@@ -130,7 +136,7 @@ end
 
 function LocalOrdinalGene:__tostring()
 
-	return tostring(self.value)
+	return tostring("Local Ordinal Gene Value: " ... self.value)
 
 end
 
