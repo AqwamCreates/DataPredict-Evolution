@@ -26,6 +26,8 @@
 
 --]]
 
+local Selectors = require(script.Parent.Selectors)
+
 local tableInsert = table.insert
 
 local tableSort = table.sort
@@ -50,7 +52,7 @@ function PetriDish.new(parameterDictionary)
 	
 	NewPetriDish.crossoverRate = parameterDictionary.crossoverRate or 0.5
 	
-	NewPetriDish.Selector = parameterDictionary.Selector 
+	NewPetriDish.Selector = parameterDictionary.Selector or Selectors.Tournament.new()
 	
 	NewPetriDish.reuseElites = parameterDictionary.reuseElites or false
 
