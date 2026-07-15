@@ -2,7 +2,7 @@
 
 	--------------------------------------------------------------------
 
-	Aqwam's Genetic Evolution Library (DataPredict Genetics)
+	Aqwam's Evolution Library (DataPredict Evolution)
 
 	Author: Aqwam Harish Aiman
 	
@@ -28,32 +28,38 @@
 
 local AqwamGeneticEvolutionLibrary = {}
 
-local Genes = script.Genes
+local Genetic = script.Genetic
 
-local Selectors = script.Selectors
+local Genes = Genetic.Genes
 
-AqwamGeneticEvolutionLibrary.Genes = {
+local Selectors = Genetic.Selectors
+
+AqwamGeneticEvolutionLibrary.Genetic = {
+
+	Genes = {
+
+		ContinuousGene = require(Genes.ContinuousGene),
+
+		DiscreteGene = require(Genes.DiscreteGene),
+
+		LocalOrdinalGene = require(Genes.LocalOrdinalGene),
+
+		GlobalOrdinalGene = require(Genes.GlobalOrdinalGene),
+
+	},
 	
-	ContinuousGene = require(Genes.ContinuousGene),
+	Selectors = {
+		
+		TournamentSelector = require(Selectors.TournamentSelector),
+		
+		RouletteWheel = require(Selectors.RouletteWheel),
+		
+	},
 	
-	DiscreteGene = require(Genes.DiscreteGene),
+	Chromosome = require(script.Chromosome),
 	
-	LocalOrdinalGene = require(Genes.LocalOrdinalGene),
-	
-	GlobalOrdinalGene = require(Genes.GlobalOrdinalGene),
-	
+	PetriDish = require(script.PetriDish),
+
 }
-
-AqwamGeneticEvolutionLibrary.Selectors = {
-	
-	Tournament = require(Selectors.Tournament),
-	
-	RouletteWheel = require(Selectors.RouletteWheel),
-	
-}
-
-AqwamGeneticEvolutionLibrary.Chromosome = require(script.Chromosome)
-
-AqwamGeneticEvolutionLibrary.PetriDish = require(script.PetriDish)
 
 return AqwamGeneticEvolutionLibrary
