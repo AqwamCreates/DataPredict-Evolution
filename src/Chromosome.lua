@@ -30,6 +30,22 @@ local mathRandom = math.random
 
 local Chromosome = {}
 
+local function defaultActivationFunction(valueArray, environmentArray)
+
+	local activationValue = 0
+
+	for i, value in ipairs(valueArray) do 
+
+		local environmentValue = environmentArray[i]
+
+		activationValue = activationValue + (value * environmentValue)
+
+	end
+
+	return activationValue
+
+end
+
 local function deepCopyValue(original, copies)
 
 	copies = copies or {}
@@ -94,13 +110,13 @@ function Chromosome:mutate(forceMutateChromosome, forceMutateGene)
 	
 end
 
-function Chromosome:activate()
+function Chromosome:activate(environmentArray)
 	
 	local valueArray = {}
 	
 	for i, Gene in ipairs(self.geneArray) do valueArray[i] = Gene.value end
 	
-	return self.activationFunction(table.unpack(valueArray))
+	return self.activationFunction(valueArray, environmentArray)
 	
 end
 
@@ -108,6 +124,32 @@ function Chromosome:clone()
 
 	return deepCopyValue(self)
 
+end
+
+function Chromosome:crossover(OtherChromosome, exchangeRate)
+	
+	local ClonedChromosome = self:clone()
+	
+	local ClonedOtherChromosome = OtherChromosome:clone()
+	
+	for geneIndex, ClonedGene in ipairs(ClonedChromosome.geneArray) do
+		
+		if (mathRandom() < exchangeRate) then
+			
+			local ClonedOtherGene = ClonedOtherChromosome.geneArray[geneIndex]
+			
+			local clonedGeneValue = ClonedGene.Value
+			
+			ClonedGene.Value = ClonedOtherGene.Value
+			
+			ClonedOtherGene.Value = clonedGeneValue
+			
+		end
+		
+	end
+	
+	return ClonedChromosome, ClonedOtherChromosome
+	
 end
 
 function Chromosome:__tostring()
