@@ -138,11 +138,11 @@ function Chromosome:crossover(OtherChromosome, exchangeRate)
 			
 			local ClonedOtherGene = ClonedOtherChromosome.geneArray[geneIndex]
 			
-			local clonedGeneValue = ClonedGene.Value
+			local clonedGeneValue = ClonedGene.value
 			
-			ClonedGene.Value = ClonedOtherGene.Value
+			ClonedGene.value = ClonedOtherGene.value
 			
-			ClonedOtherGene.Value = clonedGeneValue
+			ClonedOtherGene.value = clonedGeneValue
 			
 		end
 		
