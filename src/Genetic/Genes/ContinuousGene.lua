@@ -54,6 +54,10 @@ function ContinuousGene.new(parameterDictionary)
 	
 	local mutationStandardDeviation = parameterDictionary.mutationStandardDeviation or 1
 	
+	local maximumValue = parameterDictionary.maximumValue or math.huge
+	
+	local minimumValue = parameterDictionary.minimumValue or -math.huge
+	
 	parameterDictionary.type = "Continuous"
 	
 	local NewContinuousGene = BaseGene.new(parameterDictionary)
@@ -71,6 +75,8 @@ function ContinuousGene:mutate(forceMutate)
 	if (not forceMutate) and (self.mutationChance <= mathRandom()) then return end
 		
 	local mutationValue = self.mutationStandardDeviation * mathSqrt(-2 * mathLog(mathRandom())) * mathCos(2 * mathPi * mathRandom())
+	
+	mutationValue = math.clamp(mutationValue, self.minimumValue, self.maximumValue)
 
 	self.value = self.value + mutationValue
 
