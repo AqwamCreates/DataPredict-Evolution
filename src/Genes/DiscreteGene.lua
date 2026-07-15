@@ -30,70 +30,100 @@ local BaseGene = require(script.Parent.BaseGene)
 
 local mathRandom = math.random
 
-local DiscreteGene = {}
+local GlobalOrdinalGene = {}
 
-DiscreteGene.__index = DiscreteGene
+GlobalOrdinalGene.__index = GlobalOrdinalGene
 
-setmetatable(DiscreteGene, BaseGene)
+setmetatable(GlobalOrdinalGene, BaseGene)
 
-function DiscreteGene.new(parameterDictionary)
+function GlobalOrdinalGene.new(parameterDictionary)
 
 	parameterDictionary = parameterDictionary or {}
 
-	local value = parameterDictionary.value or parameterDictionary[1] or 0
-	
-	local mutationChance = parameterDictionary.mutationChance or parameterDictionary[2] or 0
+	local value = parameterDictionary.value or 0
 
-	local mutationChoiceArray =  parameterDictionary.mutationChoiceArray or parameterDictionary[3] or {value}
-	
+	local mutationChance = parameterDictionary.mutationChance or 0
+
+	local mutationChoiceArray =  parameterDictionary.mutationChoiceArray or {value}
+
 	local numberOfMutationChoices = #mutationChoiceArray
+
+	local mutationWeightArray = parameterDictionary.mutationWeightArray or table.create(numberOfMutationChoices, 1)
 	
-	local mutationWeightArray = parameterDictionary.mutationWeightArray or parameterDictionary[4] or table.create(numberOfMutationChoices, 1)
+	local indexChange = parameterDictionary.indexChange or 1
 	
-	parameterDictionary.type = "Discrete"
+	parameterDictionary.type = "GlobalOrdinal"
+	
+	local NewGlobalOrdinalGene = BaseGene.new(parameterDictionary)
+	
+	setmetatable(NewGlobalOrdinalGene, GlobalOrdinalGene)
 
-	local NewDiscreteGene = BaseGene.new(parameterDictionary)
+	NewGlobalOrdinalGene.mutationChoiceArray = mutationChoiceArray
 
-	setmetatable(NewDiscreteGene, DiscreteGene)
+	NewGlobalOrdinalGene.mutationWeightArray = mutationWeightArray
+	
+	NewGlobalOrdinalGene.indexChange = indexChange
 
-	NewDiscreteGene.mutationChoiceArray = mutationChoiceArray
-
-	NewDiscreteGene.mutationWeightArray = mutationWeightArray
-
-	return NewDiscreteGene
+	return NewGlobalOrdinalGene
 
 end
 
-function DiscreteGene:mutate(forceMutate)
+function GlobalOrdinalGene:mutate(forceMutate)
 
 	if (not forceMutate) and (self.mutationChance <= mathRandom()) then return end
 
 	local mutationChoiceArray = self.mutationChoiceArray
 	
 	local mutationWeightArray = self.mutationWeightArray
-
-	local totalWeight = 0
-
-	for _, weight in ipairs(mutationWeightArray) do totalWeight = totalWeight + weight end
-
-	local randomPoint = mathRandom() * totalWeight
-
-	local accumulatedWeight = 0
-
-	for i, weight in ipairs(mutationWeightArray) do
-
-		accumulatedWeight = accumulatedWeight + weight
-
-		if (randomPoint <= accumulatedWeight) then
-
-			self.value = mutationChoiceArray[i]
-
-			break
-
-		end
-
+	
+	local indexChange = self.indexChange
+	
+	local numberOfMutationChoices = #mutationChoiceArray
+	
+	local arrayIndex = table.find(mutationChoiceArray, self.value)
+	
+	if (not arrayIndex) then
+		
+		self.value = mutationChoiceArray[mathRandom(numberOfMutationChoices)]
+		
+		return
+		
 	end
 
+	local totalWeight = 0
+	
+	for _, weight in ipairs(mutationWeightArray) do totalWeight = totalWeight + weight end
+	
+	local randomPoint = mathRandom() * totalWeight
+	
+	local accumulatedWeight = 0
+	
+	local currentIndex = arrayIndex
+	
+	local newValue
+	
+	repeat
+		
+		accumulatedWeight = accumulatedWeight + mutationWeightArray[currentIndex]
+		
+		if (randomPoint <= accumulatedWeight) then newValue = mutationChoiceArray[currentIndex] end
+		
+		currentIndex = currentIndex + indexChange
+		
+		if (currentIndex > numberOfMutationChoices) then
+			
+			currentIndex = currentIndex - numberOfMutationChoices
+			
+		elseif (currentIndex <= 0) then
+			
+			currentIndex = numberOfMutationChoices + currentIndex
+			
+		end
+		
+	until newValue
+	
+	self.value = newValue
+	
 end
 
-return DiscreteGene
+return GlobalOrdinalGene
