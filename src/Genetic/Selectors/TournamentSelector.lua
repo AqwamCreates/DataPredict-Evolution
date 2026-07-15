@@ -60,7 +60,7 @@ function TournamentSelector:select(ChromosomeAndScoreDictionaryArray)
 	
 	local BestChromosome = nil
 	
-	local bestChromosomeScore = -math.huge
+	local bestScore = -math.huge
 
 	for i = 1, tournamentSize, 1 do
 		
@@ -70,13 +70,13 @@ function TournamentSelector:select(ChromosomeAndScoreDictionaryArray)
 		
 		local Chromosome = ChromosomeAndScoreDictionary.Chromosome
 		
-		local chromosomeScore = ChromosomeAndScoreDictionary.score
+		local score = ChromosomeAndScoreDictionary.score
 		
-		if (chromosomeScore > bestChromosomeScore) then
+		if (score > bestScore) then
 			
 			BestChromosome = Chromosome
 			
-			bestChromosomeScore = chromosomeScore
+			bestScore = score
 			
 		end
 		
