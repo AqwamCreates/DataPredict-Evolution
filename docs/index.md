@@ -20,7 +20,7 @@
 
 | Version | Current Version Number |
 |---------|------------------------|
-| Beta    | 0.1.0                  |
+| Beta    | 0.0.0                  |
 
 DataPredict™ Zero is a derivative-free optimization library Roblox and Pure Lua.
 
