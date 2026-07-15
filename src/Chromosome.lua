@@ -98,9 +98,9 @@ function Chromosome.new(parameterDictionary)
 
 	NewChromosome.geneArray = parameterDictionary.geneArray or {}
 	
-	NewChromosome.activationFunction = parameterDictionary.activationFunction or defaultActivationFunction
-	
 	NewChromosome.mutationChance = parameterDictionary.mutationChance or 0
+	
+	NewChromosome.activationFunction = parameterDictionary.activationFunction or defaultActivationFunction
 
 	return NewChromosome
 
