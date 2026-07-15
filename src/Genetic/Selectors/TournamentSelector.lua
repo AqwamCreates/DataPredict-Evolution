@@ -52,11 +52,11 @@ function TournamentSelector.new(parameterDictionary)
 	
 end
 
-function TournamentSelector:select(ChromosomeAndScoreDictionaryDictionary)
+function TournamentSelector:select(ChromosomeAndScoreDictionaryArray)
 	
 	local tournamentSize = self.tournamentSize
 	
-	local numberOfChromosomes = #ChromosomeAndScoreDictionaryDictionary
+	local numberOfChromosomes = #ChromosomeAndScoreDictionaryArray
 	
 	local BestChromosome = nil
 	
@@ -66,17 +66,17 @@ function TournamentSelector:select(ChromosomeAndScoreDictionaryDictionary)
 		
 		local chromosomeIndex = mathRandom(1, numberOfChromosomes)
 
-		local chromosomeDictionary = ChromosomeAndScoreDictionaryDictionary[chromosomeIndex]
+		local ChromosomeAndScoreDictionary = ChromosomeAndScoreDictionaryArray[chromosomeIndex]
 		
-		local Chromosome = chromosomeDictionary.Chromosome
+		local Chromosome = ChromosomeAndScoreDictionary.Chromosome
 		
-		local chromosomeScore = chromosomeDictionary.score
+		local chromosomeScore = ChromosomeAndScoreDictionary.score
 		
 		if (chromosomeScore > bestChromosomeScore) then
 			
-			bestChromosomeScore = chromosomeScore
-			
 			BestChromosome = Chromosome
+			
+			bestChromosomeScore = chromosomeScore
 			
 		end
 		
