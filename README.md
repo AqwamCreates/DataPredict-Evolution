@@ -1,6 +1,6 @@
 # DataPredict™ Zero
 
-![DataPredict Zero Icon](icons/DataPredictZeronIcon.png)
+![DataPredict Zero Icon](icons/DataPredictZeroIcon.png)
 
 --------------------------------------------------------------------
 
