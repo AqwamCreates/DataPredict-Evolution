@@ -118,7 +118,7 @@ function Chromosome:__tostring()
 	
 	local numberOfGenes = #geneArray
 	
-	for i, Gene in ipairs(geneArray) do stringText = stringText .. Gene .. (i < #numberOfGenes and " " or "") end
+	for i, Gene in ipairs(geneArray) do stringText = stringText .. Gene .. (i < numberOfGenes and " " or "") end
 	
 	stringText = stringText .. "}"
 	
