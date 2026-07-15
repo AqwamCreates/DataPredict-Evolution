@@ -82,9 +82,11 @@ function PetriDish:cultivate(ChromosomeArray, scoreArray)
 
 	local ChromosomeAndScoreDictionaryDictionary = {}
 	
-	for ChromosomeIndex, Chromosome in ipairs(ChromosomeArray) do 
+	for ChromosomeIndex, Chromosome in ipairs(ChromosomeArray) do
 		
-		local ChromosomeAndScoreDictionary = {Chromosome = Chromosome, score = scoreArray[ChromosomeIndex]}
+		local score = scoreArray[ChromosomeIndex]
+		
+		local ChromosomeAndScoreDictionary = {Chromosome = Chromosome, score = score}
 		
 		tableInsert(ChromosomeAndScoreDictionaryDictionary, ChromosomeAndScoreDictionary) 
 		
