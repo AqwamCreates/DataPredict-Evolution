@@ -38,13 +38,39 @@ setmetatable(DiscreteGene, BaseGene)
 
 local mutationModeFunctionList = {
 	
-	["Global"] = function(arrayIndex, indexChange, mutationWeightArray)
+	["Global"] = function(arrayIndex, mutationWeightArray, stepSize)
+
+		local totalWeight = 0
+
+		for _, weight in ipairs(mutationWeightArray) do totalWeight = totalWeight + weight end
+		
+		if (totalWeight == 0) then return mathRandom(#mutationWeightArray) end
+
+		local randomPoint = mathRandom() * totalWeight
+
+		local accumulatedWeight = 0
+
+		local newArrayIndex
+
+		for currentArrayIndex, weight in ipairs(mutationWeightArray) do
+
+			accumulatedWeight = accumulatedWeight + weight
+
+			if (randomPoint <= accumulatedWeight) then return currentArrayIndex end
+
+		end
+
+	end,
+	
+	["Stepwise"] = function(arrayIndex, mutationWeightArray, stepSize)
 
 		local numberOfMutationWeights = #mutationWeightArray
 
 		local totalWeight = 0
 
 		for _, weight in ipairs(mutationWeightArray) do totalWeight = totalWeight + weight end
+		
+		if (totalWeight == 0) then return mathRandom(numberOfMutationWeights) end
 
 		local randomPoint = mathRandom() * totalWeight
 
@@ -60,7 +86,7 @@ local mutationModeFunctionList = {
 
 			if (randomPoint <= accumulatedWeight) then newArrayIndex = currentArrayIndex end
 
-			currentArrayIndex = currentArrayIndex + indexChange
+			currentArrayIndex = currentArrayIndex + stepSize
 
 			if (currentArrayIndex > numberOfMutationWeights) then
 
@@ -78,7 +104,7 @@ local mutationModeFunctionList = {
 		
 	end,
 	
-	["Local"] = function(arrayIndex, indexChange, mutationWeightArray)
+	["Local"] = function(arrayIndex, mutationWeightArray, stepSize)
 		
 		local numberOfMutationWeights = #mutationWeightArray
 
@@ -113,6 +139,8 @@ local mutationModeFunctionList = {
 		local totalWeight = 0
 
 		for _, weight in ipairs(neighbourWeightArray) do totalWeight = totalWeight + weight end
+		
+		if (totalWeight == 0) then return mathRandom(#neighbourWeightArray) end
 
 		local randomPoint = mathRandom() * totalWeight
 
@@ -123,28 +151,6 @@ local mutationModeFunctionList = {
 			accumulatedWeight = accumulatedWeight + weight
 
 			if (randomPoint <= accumulatedWeight) then return neighbourIndexArray[i] end
-
-		end
-		
-	end,
-	
-	["Random"] = function(arrayIndex, indexChange, mutationWeightArray)
-		
-		local totalWeight = 0
-
-		for _, weight in ipairs(mutationWeightArray) do totalWeight = totalWeight + weight end
-
-		local randomPoint = mathRandom() * totalWeight
-
-		local accumulatedWeight = 0
-		
-		local newArrayIndex
-
-		for currentArrayIndex, weight in ipairs(mutationWeightArray) do
-
-			accumulatedWeight = accumulatedWeight + weight
-
-			if (randomPoint <= accumulatedWeight) then return currentArrayIndex end
 
 		end
 		
@@ -164,7 +170,7 @@ function DiscreteGene.new(parameterDictionary)
 
 	local mutationWeightArray = parameterDictionary.mutationWeightArray or table.create(#mutationChoiceArray, 1)
 	
-	local indexChange = parameterDictionary.indexChange or 1
+	local stepSize = parameterDictionary.stepSize or 1
 	
 	local mutationMode = parameterDictionary.mutationMode or "Local"
 	
@@ -173,12 +179,12 @@ function DiscreteGene.new(parameterDictionary)
 	local NewDiscreteGene = BaseGene.new(parameterDictionary)
 	
 	setmetatable(NewDiscreteGene, DiscreteGene)
-	
-	NewDiscreteGene.indexChange = indexChange
 
 	NewDiscreteGene.mutationChoiceArray = mutationChoiceArray
 
 	NewDiscreteGene.mutationWeightArray = mutationWeightArray
+	
+	NewDiscreteGene.stepSize = stepSize
 	
 	NewDiscreteGene.mutationMode = mutationMode
 
@@ -202,7 +208,7 @@ function DiscreteGene:mutate(forceMutate)
 
 		if (not mutationFunction) then error("Invalid mutation mode.") end
 
-		newArrayIndex = mutationFunction(arrayIndex, self.indexChange, self.mutationWeightArray)
+		newArrayIndex = mutationFunction(arrayIndex, self.mutationWeightArray, self.stepSize)
 		
 	else
 		
