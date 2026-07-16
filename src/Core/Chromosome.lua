@@ -152,6 +152,20 @@ function Chromosome:crossover(OtherChromosome, crossoverRate)
 	
 end
 
+function Chromosome:getGeneValueArray()
+	
+	local geneValueArray = {}
+	
+	for geneIndex, Gene in ipairs(Chromosome.geneArray) do
+		
+		geneValueArray[geneIndex] = Gene.value
+		
+	end
+	
+	return geneValueArray
+	
+end
+
 function Chromosome:clone()
 
 	return deepCopyValue(self)
@@ -166,7 +180,7 @@ function Chromosome:__tostring()
 	
 	local numberOfGenes = #geneArray
 	
-	for i, Gene in ipairs(geneArray) do stringText = stringText .. Gene .. (i < numberOfGenes and " " or "") end
+	for i, Gene in ipairs(geneArray) do stringText = stringText .. Gene.value .. (i < numberOfGenes and " " or "") end
 	
 	stringText = stringText .. "}"
 	
