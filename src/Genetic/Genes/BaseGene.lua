@@ -96,7 +96,7 @@ end
 
 function BaseGene:__tostring()
 	
-	return tostring("Gene Type: " .. self.type .. " Value: " .. self.value)
+	return tostring(self.value)
 	
 end
 
