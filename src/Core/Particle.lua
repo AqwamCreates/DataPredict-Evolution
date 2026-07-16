@@ -26,196 +26,276 @@
 
 --]]
 
-local Particle = require(script.Parent.Parent.Core.Particle)
+local mathRandom = math.random
 
 local mathHuge = math.huge
 
-local mathRandom = math.random
-
 local tableClone = table.clone
 
-local SchrodingerBox = {}
+local Particle = {}
 
-SchrodingerBox.__index = SchrodingerBox
+Particle.__index = Particle
 
-local function defaultEvaluationFunction(positionArray, environmentArray)
-	
-	local score = 0
+local function deepCopyValue(original, copies)
 
-	for i, position in ipairs(positionArray) do 
+	copies = copies or {}
 
-		local environmentValue = environmentArray[i]
+	local originalType = type(original)
 
-		score = score + (position * environmentValue)
+	local copy
+
+	if (originalType == 'table') then
+
+		if copies[original] then
+
+			copy = copies[original]
+
+		else
+
+			copy = {}
+
+			copies[original] = copy
+
+			for originalKey, originalValue in next, original, nil do
+
+				copy[deepCopyValue(originalKey, copies)] = deepCopyValue(originalValue, copies)
+
+			end
+
+			setmetatable(copy, deepCopyValue(getmetatable(original), copies))
+
+		end
+
+	else
+
+		copy = original
 
 	end
-	
-	return score
+
+	return copy
 
 end
 
-function SchrodingerBox.new(parameterDictionary)
+function Particle.new(parameterDictionary)
 
 	parameterDictionary = parameterDictionary or {}
 	
-	local ParticleArray = parameterDictionary.ParticleArray or {}
-	
-	local particleCount = parameterDictionary.particleCount or 100
-	
-	local particleCountInArray = #ParticleArray
-	
-	if (particleCountInArray > 0) then particleCount = particleCountInArray end
-	
 	local dimensionSize = parameterDictionary.dimensionSize or 1
 	
-	local evaluateFunction = parameterDictionary.evaluateFunction or defaultEvaluationFunction
+	local positionArray = parameterDictionary.positionArray or {}
 	
-	local inertiaCoefficientArray = parameterDictionary.inertiaCoefficientArray or table.create(dimensionSize, 0)
+	positionArray = tableClone(positionArray)
 	
-	local cognitiveCofficientArray = parameterDictionary.cognitiveCofficientArray or table.create(dimensionSize, 0)
+	local velocityArray = parameterDictionary.velocityArray or {}
 	
-	local socialCoefficientArray = parameterDictionary.socialCoefficientArray or table.create(dimensionSize, 0)
+	velocityArray = tableClone(velocityArray)
 	
-	local minimumBoundArray = parameterDictionary.minimumBoundArray or table.create(dimensionSize, -mathHuge)
+	local bestPositionArray = parameterDictionary.bestPositionArray or {}
 	
-	local maximumBoundArray = parameterDictionary.maximumBoundArray or table.create(dimensionSize, mathHuge)
+	bestPositionArray = tableClone(bestPositionArray)
 	
-	local globalBestScore = parameterDictionary.globalBestScore or -mathHuge
+	local bestScore = parameterDictionary.bestScore or -mathHuge
 	
-	local globalBestPositionArray = parameterDictionary.globalBestPositionArray or table.create(dimensionSize, 0)
+	local NewParticle = {}
 
-	local NewSchrodingerBox = {}
-
-	setmetatable(NewSchrodingerBox, SchrodingerBox)
+	setmetatable(NewParticle, Particle)
 	
-	for i = 1, particleCount, 1 do
+	for i = 1, dimensionSize, 1 do
 		
-		ParticleArray[i] = ParticleArray[i] or Particle.new({dimensionSize = dimensionSize})
+		local position = positionArray[i] or mathRandom()
+		
+		local velocity = velocityArray[i] or 0
+		
+		positionArray[i] = position
+		
+		velocityArray[i] = velocity
+		
+		bestPositionArray[i] = position
 		
 	end
 	
-	NewSchrodingerBox.ParticleArray = ParticleArray
-	
-	NewSchrodingerBox.particleCount = particleCount
-	
-	NewSchrodingerBox.dimensionSize = dimensionSize
-	
-	NewSchrodingerBox.evaluateFunction = evaluateFunction
-	
-	NewSchrodingerBox.inertiaCoefficientArray = inertiaCoefficientArray
-	
-	NewSchrodingerBox.cognitiveCofficientArray = cognitiveCofficientArray
-	
-	NewSchrodingerBox.socialCoefficientArray = socialCoefficientArray
-	
-	NewSchrodingerBox.minimumBoundArray = minimumBoundArray
-	
-	NewSchrodingerBox.maximumBoundArray = maximumBoundArray
-	
-	NewSchrodingerBox.globalBestScore = globalBestScore
-	
-	NewSchrodingerBox.globalBestPositionArray = globalBestPositionArray
+	NewParticle.dimensionSize = dimensionSize
 
-	return NewSchrodingerBox
+	NewParticle.positionArray = positionArray
+	
+	NewParticle.velocityArray = velocityArray
+	
+	NewParticle.bestPositionArray = bestPositionArray
+	
+	NewParticle.bestScore = bestScore
+
+	return NewParticle
 
 end
 
-function SchrodingerBox:observe(environmentArray)
-
-	local ParticleArray = self.ParticleArray
+function Particle:applyImpulse(inertiaArray, cognitiveArray, socialArray)
 	
 	local dimensionSize = self.dimensionSize
 	
-	local evaluateFunction = self.evaluateFunction
-
-	local minimumBoundArray = self.minimumBoundArray
+	local velocityArray = self.velocityArray
 	
-	local maximumBoundArray = self.maximumBoundArray
-
-	local inertiaCoefficientArray = self.inertiaCoefficientArray
+	local isInertiaArrayTable = (type(inertiaArray) == "table")
 	
-	local cognitiveCofficientArray = self.cognitiveCofficientArray
+	local isCognitiveArrayTable = (type(cognitiveArray) == "table")
 	
-	local socialCoefficientArray = self.socialCoefficientArray
+	local isSocialArrayTable = (type(socialArray) == "table")
 	
-	local globalBestScore = self.globalBestScore
-
-	local globalBestPositionArray = self.globalBestPositionArray
-
-	local hasNewGlobalValues = false
-
-	for _, Particle in ipairs(ParticleArray) do
+	for dimensionIndex = 1, dimensionSize, 1 do
 		
-		local positionArray = Particle:getPositionArray()
+		local inertia = (isInertiaArrayTable and (inertiaArray[dimensionIndex] or 0)) or inertiaArray
 		
-		local score = evaluateFunction(positionArray, environmentArray)
-
-		if (Particle:record(score)) then
-
-			if (score > globalBestScore) then
-				
-				globalBestScore = score
-				
-				globalBestPositionArray = Particle:getBestPositionArray()
-
-				hasNewGlobalValues = true
-				
-			end
-			
-		end
+		local cognitive = (isCognitiveArrayTable and (cognitiveArray[dimensionIndex] or 0)) or cognitiveArray
+		
+		local social = (isSocialArrayTable and (socialArray[dimensionIndex] or 0)) or socialArray
+		
+		local newVelocity = inertia + cognitive + social
+		
+		velocityArray[dimensionIndex] = newVelocity
 		
 	end
-
-	for _, Particle in ipairs(ParticleArray) do
-		
-		local positionArray = Particle:getPositionArray(true)
-		
-		local velocityArray = Particle:getVelocityArray(true)
-		
-		local bestPositionArray = Particle:getBestPositionArray(true)
-
-		local inertiaArray = {}
-		
-		local cognitiveArray = {}
-		
-		local socialArray = {}
-
-		for i = 1, dimensionSize, 1 do
-			
-			local randomValue1 = mathRandom()
-			
-			local randomValue2 = mathRandom()
-
-			inertiaArray[i] = inertiaCoefficientArray[i] * velocityArray[i]
-
-			cognitiveArray[i] = cognitiveCofficientArray[i] * randomValue1 * (bestPositionArray[i] - positionArray[i])
-
-			socialArray[i] = socialCoefficientArray[i] * randomValue2 * (globalBestPositionArray[i] - positionArray[i])
-			
-		end
-
-		Particle:applyImpulse(inertiaArray, cognitiveArray, socialArray)
-
-		Particle:move(minimumBoundArray, maximumBoundArray)
-		
-	end
-	
-	self.globalBestPositionArray = globalBestPositionArray
-
-	self.globalBestScore = globalBestScore
-
-	return globalBestPositionArray, globalBestScore, hasNewGlobalValues
 	
 end
 
-function SchrodingerBox:destroy()
+function Particle:move(minimumBoundArray, maximumBoundArray) -- The change in position of the particle is based on the space they have, hence the bound arrays should not be kept as internal particle properties.
+	
+	local dimensionSize = self.dimensionSize
+	
+	local positionArray = self.positionArray
+	
+	local velocityArray = self.velocityArray
+	
+	if (not minimumBoundArray) then minimumBoundArray = -mathHuge end
+	
+	if (not maximumBoundArray) then maximumBoundArray = mathHuge end
+	
+	local isMinimumBoundArrayTable = (type(minimumBoundArray) == "table")
+	
+	local isMaximumBoundArrayTable = (type(maximumBoundArray) == "table")
+	
+	for dimensionIndex = 1, dimensionSize, 1 do
+		
+		local position = positionArray[dimensionIndex]
+		
+		local velocity = velocityArray[dimensionIndex]
+		
+		local minimumBound = (isMinimumBoundArrayTable and (minimumBoundArray[dimensionIndex] or -mathHuge)) or minimumBoundArray
+		
+		local maximumBound = (isMaximumBoundArrayTable and (maximumBoundArray[dimensionIndex] or mathHuge)) or maximumBoundArray
+		
+		local newPosition = position + velocity
+		
+		newPosition = math.clamp(newPosition, minimumBound, maximumBound)
+		
+		positionArray[dimensionIndex] = newPosition
+		
+	end
+	
+end
 
+function Particle:record(score)
+	
+	if (score < self.bestScore) then return false end
+	
+	self.bestPositionArray = tableClone(self.positionArray)
+	
+	self.bestScore = score
+	
+	return true
+	
+end
+
+function Particle:setPositionArray(positionArray, doNotDeepCopy)
+	
+	positionArray = (doNotDeepCopy and positionArray) or deepCopyValue(positionArray)
+	
+	self.positionArray = positionArray
+	
+end
+
+function Particle:getPositionArray(doNotDeepCopy)
+	
+	if (doNotDeepCopy) then return self.positionArray end
+	
+	return deepCopyValue(self.positionArray)
+	
+end
+
+function Particle:setVelocityArray(velocityArray, doNotDeepCopy)
+	
+	velocityArray = (doNotDeepCopy and velocityArray) or deepCopyValue(velocityArray)
+	
+	self.velocityArray = velocityArray
+	
+end
+
+function Particle:getVelocityArray(doNotDeepCopy)
+	
+	if (doNotDeepCopy) then return self.velocityArray end
+	
+	return deepCopyValue(self.velocityArray)
+	
+end
+
+function Particle:setBestPositionArray(bestPositionArray, doNotDeepCopy)
+	
+	bestPositionArray = (doNotDeepCopy and bestPositionArray) or deepCopyValue(bestPositionArray)
+	
+	self.bestPositionArray = bestPositionArray
+	
+end
+
+function Particle:getBestPositionArray(doNotDeepCopy)
+
+	if (doNotDeepCopy) then return self.bestPositionArray end
+
+	return deepCopyValue(self.bestPositionArray)
+
+end
+
+function Particle:setBestScore(bestScore)
+	
+	self.bestScore = bestScore
+	
+end
+
+function Particle:getBestScore()
+	
+	return self.bestScore
+	
+end
+
+function Particle:clone()
+
+	return deepCopyValue(self)
+
+end
+
+function Particle:__tostring()
+	
+	local numberOfPositions = #self.positionArray
+	
+	local text = "{"
+	
+	for positionIndex, positionValue in ipairs(self.positionArray) do
+		
+		text = text .. positionValue
+		
+		if (positionIndex < numberOfPositions) then text = text .. ", " end
+		
+	end
+	
+	return text .. "}"
+	
+end
+
+function Particle:destroy()
+	
 	table.clear(self)
-
+	
 	setmetatable(self, nil)
-
+	
 	self = nil
-
+	
 end
 
-return SchrodingerBox
+return Particle
