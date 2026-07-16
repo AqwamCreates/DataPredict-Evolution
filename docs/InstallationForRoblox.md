@@ -6,7 +6,7 @@ To start, we must first link our machine/deep learning library with our matrix l
 
 Links:
 
-[Beta](Aqwam's Derivative Free Optimization Library](https://github.com/AqwamCreates/DataPredict/blob/main/module_scripts/AqwamDerivativeFreeOptimizationLibrary.rbxm)
+[Beta](https://github.com/AqwamCreates/DataPredict/blob/main/module_scripts/AqwamDerivativeFreeOptimizationLibrary.rbxm)
 
 To download the files from GitHub, you must click on the download button highlighted in the red box.
 
