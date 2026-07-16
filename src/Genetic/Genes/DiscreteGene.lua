@@ -59,6 +59,8 @@ local mutationModeFunctionList = {
 			if (randomPoint <= accumulatedWeight) then return currentArrayIndex end
 
 		end
+		
+		return (#mutationWeightArray)
 
 	end,
 	
@@ -149,6 +151,8 @@ local mutationModeFunctionList = {
 			if (randomPoint <= accumulatedNeighbourWeight) then return neighbourIndexArray[neighbourIndex] end
 			
 		end
+		
+		return neighbourIndexArray[#neighbourIndexArray]
 		
 	end,
 	
