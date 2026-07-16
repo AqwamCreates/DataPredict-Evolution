@@ -80,7 +80,7 @@ function Particle.new(parameterDictionary)
 
 	parameterDictionary = parameterDictionary or {}
 	
-	local dimension = parameterDictionary.dimension or 1
+	local dimensionSize = parameterDictionary.dimensionSize or 1
 	
 	local positionArray = tableClone(parameterDictionary.positionArray) or {}
 	
@@ -94,7 +94,7 @@ function Particle.new(parameterDictionary)
 
 	setmetatable(NewParticle, Particle)
 	
-	for i = 1, dimension, 1 do
+	for i = 1, dimensionSize, 1 do
 		
 		local position = positionArray[i] or mathRandom()
 		
@@ -107,6 +107,8 @@ function Particle.new(parameterDictionary)
 		bestPositionArray[i] = position
 		
 	end
+	
+	NewParticle.dimensionSize = dimensionSize
 
 	NewParticle.positionArray = positionArray
 	
@@ -118,6 +120,82 @@ function Particle.new(parameterDictionary)
 
 	return NewParticle
 
+end
+
+function Particle:updateVelocity(inertiaArray, cognitiveArray, socialArray)
+	
+	local dimensionSize = self.dimensionSize
+	
+	local velocityArray = self.velocityArray
+	
+	if (type(inertiaArray) ~= "table") then inertiaArray = table.create(dimensionSize, inertiaArray) end
+
+	if (type(cognitiveArray) ~= "table") then cognitiveArray = table.create(dimensionSize, cognitiveArray) end
+	
+	if (type(socialArray) ~= "table") then socialArray = table.create(dimensionSize, socialArray) end
+	
+	for i = 1, dimensionSize, 1 do
+		
+		local inertia = inertiaArray[i] or 0
+		
+		local cognitive = cognitiveArray[i] or 0
+		
+		local social = socialArray[i] or 0
+		
+		local newVelocity = inertia + cognitive + social
+		
+		velocityArray[i] = newVelocity
+		
+	end
+	
+end
+
+function Particle:move(minimumBoundArray, maximumBoundArray) -- The change in position of the particle is based on the space they have, hence the bound arrays should not be kept as internal particle properties.
+	
+	local dimensionSize = self.dimensionSize
+	
+	local positionArray = self.positionArray
+	
+	local velocityArray = self.velocityArray
+	
+	if (not minimumBoundArray) then minimumBoundArray = -mathHuge end
+	
+	if (not maximumBoundArray) then maximumBoundArray = mathHuge end
+	
+	if (type(minimumBoundArray) ~= "table") then minimumBoundArray = table.create(dimensionSize, minimumBoundArray) end
+	
+	if (type(maximumBoundArray) ~= "table") then maximumBoundArray = table.create(dimensionSize, maximumBoundArray) end
+	
+	for dimensionIndex = 1, dimensionSize, 1 do
+		
+		local position = positionArray[dimensionIndex]
+		
+		local velocity = velocityArray[dimensionIndex]
+		
+		local minimumBound = minimumBoundArray[dimensionIndex] or -mathHuge
+		
+		local maximumBound = maximumBoundArray[dimensionIndex] or mathHuge
+		
+		local newPosition = position + velocity
+		
+		newPosition = math.clamp(newPosition, minimumBound, maximumBound)
+		
+		positionArray[dimensionIndex] = newPosition
+		
+	end
+	
+end
+
+function Particle:record(score)
+	
+	if (score < self.bestScore) then return false end
+	
+	self.bestPositionArray = tableClone(self.positionArray)
+	
+	self.bestScore = score
+	
+	return true
+	
 end
 
 function Particle:clone()
