@@ -88,19 +88,19 @@ function ContinuousGene:mutate(forceMutate)
 	
 	if (not forceMutate) and (self.mutationChance <= mathRandom()) then return end
 	
+	local mutationValue = self.value
+	
 	local maximumValue = self.maximumValue
 	
 	local minimumValue = self.minimumValue
 	
 	local mutationMode = self.mutationMode
 	
-	local mutationValue = 0
-	
 	if (mutationMode == "Local") then
 		
-		local mutationValue = self.mutationStandardDeviation * mathSqrt(-2 * mathLog(mathRandom())) * mathCos(2 * mathPi * mathRandom())
+		local noiseValue = self.mutationStandardDeviation * mathSqrt(-2 * mathLog(mathRandom())) * mathCos(2 * mathPi * mathRandom())
 		
-		mutationValue = self.value + mutationValue
+		mutationValue = mutationValue + noiseValue
 		
 	elseif (mutationMode == "Global") then
 		
