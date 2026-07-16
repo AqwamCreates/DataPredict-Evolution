@@ -1,6 +1,6 @@
 # Welcome to Aqwam's DataPredict™ Axon Library!
 
-> When Gradients Fail, Go Zero!
+> When gradients fail, go zero!
 
 ## Commercial Use Information
 
