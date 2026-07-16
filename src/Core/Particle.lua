@@ -128,23 +128,23 @@ function Particle:updateVelocity(inertiaArray, cognitiveArray, socialArray)
 	
 	local velocityArray = self.velocityArray
 	
-	if (type(inertiaArray) ~= "table") then inertiaArray = table.create(dimensionSize, inertiaArray) end
-
-	if (type(cognitiveArray) ~= "table") then cognitiveArray = table.create(dimensionSize, cognitiveArray) end
+	local isInertiaArrayTable = (type(inertiaArray) == "table")
 	
-	if (type(socialArray) ~= "table") then socialArray = table.create(dimensionSize, socialArray) end
+	local isCognitiveArrayTable = (type(cognitiveArray) == "table")
 	
-	for i = 1, dimensionSize, 1 do
+	local isSocialArrayTable = (type(socialArray) == "table")
+	
+	for dimensionIndex = 1, dimensionSize, 1 do
 		
-		local inertia = inertiaArray[i] or 0
+		local inertia = (isInertiaArrayTable and (inertiaArray[dimensionIndex] or 0)) or inertiaArray
 		
-		local cognitive = cognitiveArray[i] or 0
+		local cognitive = (isCognitiveArrayTable and (cognitiveArray[dimensionIndex] or 0)) or cognitiveArray
 		
-		local social = socialArray[i] or 0
+		local social = (isSocialArrayTable and (socialArray[dimensionIndex] or 0)) or socialArray
 		
 		local newVelocity = inertia + cognitive + social
 		
-		velocityArray[i] = newVelocity
+		velocityArray[dimensionIndex] = newVelocity
 		
 	end
 	
@@ -162,9 +162,9 @@ function Particle:move(minimumBoundArray, maximumBoundArray) -- The change in po
 	
 	if (not maximumBoundArray) then maximumBoundArray = mathHuge end
 	
-	if (type(minimumBoundArray) ~= "table") then minimumBoundArray = table.create(dimensionSize, minimumBoundArray) end
+	local isMinimumBoundArrayTable = (type(minimumBoundArray) == "table")
 	
-	if (type(maximumBoundArray) ~= "table") then maximumBoundArray = table.create(dimensionSize, maximumBoundArray) end
+	local isMaximumBoundArrayTable = (type(maximumBoundArray) == "table")
 	
 	for dimensionIndex = 1, dimensionSize, 1 do
 		
@@ -172,9 +172,9 @@ function Particle:move(minimumBoundArray, maximumBoundArray) -- The change in po
 		
 		local velocity = velocityArray[dimensionIndex]
 		
-		local minimumBound = minimumBoundArray[dimensionIndex] or -mathHuge
+		local minimumBound = (isMinimumBoundArrayTable and (minimumBoundArray[dimensionIndex] or -mathHuge)) or minimumBoundArray
 		
-		local maximumBound = maximumBoundArray[dimensionIndex] or mathHuge
+		local maximumBound = (isMaximumBoundArrayTable and (maximumBoundArray[dimensionIndex] or mathHuge)) or maximumBoundArray
 		
 		local newPosition = position + velocity
 		
