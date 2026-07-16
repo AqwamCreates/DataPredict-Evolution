@@ -222,6 +222,12 @@ function Particle:getBestPositionArray(doNotDeepCopy)
 
 end
 
+function Particle:getBestScore()
+	
+	return self.bestScore
+	
+end
+
 function Particle:clone()
 
 	return deepCopyValue(self)
