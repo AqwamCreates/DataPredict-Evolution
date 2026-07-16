@@ -44,10 +44,6 @@ AqwamEvolutionLibrary.Genetic = {
 
 		DiscreteGene = require(Genes.DiscreteGene),
 
-		LocalOrdinalGene = require(Genes.LocalOrdinalGene),
-
-		GlobalOrdinalGene = require(Genes.GlobalOrdinalGene),
-
 	},
 	
 	Selectors = {
