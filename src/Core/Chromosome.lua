@@ -96,7 +96,7 @@ function Chromosome.new(parameterDictionary)
 
 	setmetatable(NewChromosome, Chromosome)
 
-	NewChromosome.geneArray = parameterDictionary.geneArray or {}
+	NewChromosome.GeneArray = parameterDictionary.GeneArray or {}
 	
 	NewChromosome.mutationChance = parameterDictionary.mutationChance or 0
 	
@@ -110,7 +110,7 @@ function Chromosome:mutate(forceMutateChromosome, forceMutateGene)
 	
 	if (not forceMutateChromosome) and (self.mutationChance <= mathRandom()) then return end
 	
-	for i, Gene in ipairs(self.geneArray) do Gene:mutate(forceMutateGene) end
+	for i, Gene in ipairs(self.GeneArray) do Gene:mutate(forceMutateGene) end
 	
 end
 
@@ -118,7 +118,7 @@ function Chromosome:activate(environmentArray)
 	
 	local valueArray = {}
 	
-	for i, Gene in ipairs(self.geneArray) do valueArray[i] = Gene.value end
+	for geneIndex, Gene in ipairs(self.GeneArray) do valueArray[i] = Gene.value end
 	
 	return self.activationFunction(valueArray, environmentArray)
 	
@@ -130,11 +130,11 @@ function Chromosome:crossover(OtherChromosome, crossoverRate)
 	
 	local ClonedOtherChromosome = OtherChromosome:clone()
 	
-	for geneIndex, ClonedGene in ipairs(ClonedChromosome.geneArray) do
+	for geneIndex, ClonedGene in ipairs(ClonedChromosome.GeneArray) do
 		
 		if (mathRandom() < crossoverRate) then
 			
-			local ClonedOtherGene = ClonedOtherChromosome.geneArray[geneIndex]
+			local ClonedOtherGene = ClonedOtherChromosome.GeneArray[geneIndex]
 			
 			local clonedGeneValue = ClonedGene.value
 			
@@ -152,11 +152,21 @@ function Chromosome:crossover(OtherChromosome, crossoverRate)
 	
 end
 
+function Chromosome:setGeneValueArray(geneValueArray)
+	
+	for geneIndex, Gene in ipairs(self.GeneArray) do
+		
+		Gene.value = geneValueArray[geneIndex]
+		
+	end
+	
+end
+
 function Chromosome:getGeneValueArray()
 	
 	local geneValueArray = {}
 	
-	for geneIndex, Gene in ipairs(self.geneArray) do
+	for geneIndex, Gene in ipairs(self.GeneArray) do
 		
 		geneValueArray[geneIndex] = Gene.value
 		
@@ -176,11 +186,11 @@ function Chromosome:__tostring()
 	
 	local stringText = "{"
 	
-	local geneArray = self.geneArray
+	local GeneArray = self.GeneArray
 	
-	local numberOfGenes = #geneArray
+	local numberOfGenes = #GeneArray
 	
-	for i, Gene in ipairs(geneArray) do stringText = stringText .. Gene.value .. (i < numberOfGenes and " " or "") end
+	for i, Gene in ipairs(GeneArray) do stringText = stringText .. Gene.value .. (i < numberOfGenes and " " or "") end
 	
 	stringText = stringText .. "}"
 	
