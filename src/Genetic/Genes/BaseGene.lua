@@ -30,6 +30,46 @@ local BaseGene = {}
 
 BaseGene.__index = BaseGene
 
+local function deepCopyValue(original, copies)
+
+	copies = copies or {}
+
+	local originalType = type(original)
+
+	local copy
+
+	if (originalType == 'table') then
+
+		if copies[original] then
+
+			copy = copies[original]
+
+		else
+
+			copy = {}
+
+			copies[original] = copy
+
+			for originalKey, originalValue in next, original, nil do
+
+				copy[deepCopyValue(originalKey, copies)] = deepCopyValue(originalValue, copies)
+
+			end
+
+			setmetatable(copy, deepCopyValue(getmetatable(original), copies))
+
+		end
+
+	else
+
+		copy = original
+
+	end
+
+	return copy
+
+end
+
 function BaseGene.new(parameterDictionary)
 
 	parameterDictionary = parameterDictionary or {}
@@ -45,6 +85,12 @@ function BaseGene.new(parameterDictionary)
 	NewBaseGene.mutationChance = parameterDictionary.mutationChance or 0
 
 	return NewBaseGene
+
+end
+
+function BaseGene:clone()
+
+	return deepCopyValue(self)
 
 end
 
