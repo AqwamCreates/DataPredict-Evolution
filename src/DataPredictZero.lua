@@ -39,6 +39,8 @@ AqwamEvolutionLibrary.Genetic = {
 	Genes = {
 
 		ContinuousGene = require(Genes.ContinuousGene),
+		
+		IntegerGene = require(Genes.IntegerGene),
 
 		DiscreteGene = require(Genes.DiscreteGene),
 
