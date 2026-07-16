@@ -25,7 +25,7 @@ function Annealer.new(parameterDictionary)
 	
 	local evaluateFunction = parameterDictionary.evaluateFunction or defaultEvaluationFunction
 	
-	local initialTemperature = parameterDictionary.initialTemperature or 1000
+	local initialTemperature = parameterDictionary.initialTemperature or 100 -- A reference to the chromosome's annealing temperature.
 	
 	local coolingRate = parameterDictionary.coolingRate or 0.95
 	
