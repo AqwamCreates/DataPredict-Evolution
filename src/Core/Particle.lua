@@ -198,6 +198,30 @@ function Particle:record(score)
 	
 end
 
+function Particle:getPositionArray(doNotDeepCopy)
+	
+	if (doNotDeepCopy) then return self.positionArray end
+	
+	return deepCopyValue(self.positionArray)
+	
+end
+
+function Particle:getVelocityArray(doNotDeepCopy)
+	
+	if (doNotDeepCopy) then return self.velocityArray end
+	
+	return deepCopyValue(self.velocityArray)
+	
+end
+
+function Particle:getBestPositionArray(doNotDeepCopy)
+
+	if (doNotDeepCopy) then return self.bestPositionArray end
+
+	return deepCopyValue(self.bestPositionArray)
+
+end
+
 function Particle:clone()
 
 	return deepCopyValue(self)
