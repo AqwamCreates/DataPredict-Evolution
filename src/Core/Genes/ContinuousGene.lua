@@ -54,7 +54,7 @@ function ContinuousGene.new(parameterDictionary)
 
 	local value = parameterDictionary.value or 0
 	
-	local mutationChance = parameterDictionary.mutationChance or 0
+	local mutationProbability = parameterDictionary.mutationProbability or 0
 	
 	local maximumValue = parameterDictionary.maximumValue or safeMaximumValue
 	
