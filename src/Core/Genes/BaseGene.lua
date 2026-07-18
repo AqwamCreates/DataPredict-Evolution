@@ -82,7 +82,7 @@ function BaseGene.new(parameterDictionary)
 	
 	NewBaseGene.type = parameterDictionary.type or "Base"
 
-	NewBaseGene.mutationChance = parameterDictionary.mutationChance or 0
+	NewBaseGene.mutationProbability = parameterDictionary.mutationProbability or 0
 
 	return NewBaseGene
 
