@@ -1,8 +1,6 @@
 # Getting Started
 
-In this library, we can customize many of our models, optimizers and others to fit our needs. This was made possible thanks to the object-orientated design of our library.
-
-To start, we must first link our machine/deep learning library with our matrix library. However, you must use "Aqwam's 2D Tensor Library" as every calculations made by our models are based on that tensor library.
+In this library, we can customize many of our algorithms.
 
 Links: [Beta](https://github.com/AqwamCreates/DataPredict-Zero/blob/main/module_scripts/AqwamDerivativeFreeOptimizationLibrary.rbxm)
 
