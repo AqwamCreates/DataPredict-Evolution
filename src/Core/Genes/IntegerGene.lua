@@ -56,7 +56,7 @@ function IntegerGene.new(parameterDictionary)
 
 	local value = parameterDictionary.value or 0
 	
-	local mutationChance = parameterDictionary.mutationChance or 0
+	local mutationProbability = parameterDictionary.mutationProbability or 0
 	
 	local maximumValue = parameterDictionary.maximumValue or safeMaximumValue
 	
@@ -88,7 +88,7 @@ end
 
 function IntegerGene:mutate(forceMutate)
 	
-	if (not forceMutate) and (self.mutationChance <= mathRandom()) then return end
+	if (not forceMutate) and (self.mutationProbability <= mathRandom()) then return end
 	
 	local mutationValue = self.value
 	
